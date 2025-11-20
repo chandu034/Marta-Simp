@@ -158,6 +158,7 @@ body {
 /* each row = soft card */
 .train-row {
   padding: 0.45rem 0.9rem;
+  overflow: hidden;
 }
 
 .train-row:not(:last-child) {
@@ -174,6 +175,7 @@ body {
 .train-text {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .train-station {
@@ -191,6 +193,8 @@ body {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.2rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .train-destination {
@@ -200,6 +204,8 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 /* line pill with pastel color */
@@ -212,6 +218,8 @@ body {
   border-radius: var(--radius-pill);
   color: var(--text-on-dark);
   background: var(--mint);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Map MARTA lines into your palette */
@@ -285,11 +293,16 @@ body {
 
 @media (max-width: 600px) {
   .App {
-    padding: 1rem;
+    /* turn off flex on mobile; behave like a normal block page */
+    display: block;
+    min-height: auto;
+    padding: 1rem 0.8rem 1.5rem;
   }
 
   .App-header {
+    margin: 0 auto;              /* center horizontally */
     padding: 1.35rem 1.2rem 1.1rem;
+    max-width: 420px;            /* nice width for phones */
   }
 
   .App-header h1 {
@@ -299,6 +312,9 @@ body {
   .tabs {
     width: 100%;
     justify-content: space-between;
+    display: inline-flex;
+    flex-direction: column;
+    
   }
 
   .tab {
