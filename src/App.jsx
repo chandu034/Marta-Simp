@@ -96,12 +96,18 @@ function App() {
         <h1>MARTA Rail Realtime</h1>
         <p>Testing the official MARTA rail realtime API through a backend proxy.</p>
 
-        {/* tiny status only if we already have data */}
+                {/* Top-right loading indicator when refreshing */}
         {loading && trains.length > 0 && (
-          <p className="status status-loading">Refreshing trains…</p>
+          <div className="refresh-indicator">
+            <div className="refresh-spinner" />
+            <div className="refresh-bar">
+              <div className="refresh-bar-fill" />
+            </div>
+          </div>
         )}
 
         <StationTabs viewMode={viewMode} onChange={setViewMode} />
+
 
         <TrainList
           trains={sortedTrainsToShow}
