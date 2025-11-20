@@ -1,22 +1,31 @@
-// src/components/StationTabs.jsx
 function StationTabs({ viewMode, onChange }) {
-  return (
-    <div className="tabs">
-      {/* First tab: Home station */}
-      <button
-        className={`tab ${viewMode === "home" ? "tab--active" : ""}`}
-        onClick={() => onChange("home")}
-      >
-        Your home station: Lindbergh Center
-      </button>
+  const isHome = viewMode === "home";
 
-      {/* Second tab: All trains */}
-      <button
-        className={`tab ${viewMode === "all" ? "tab--active" : ""}`}
-        onClick={() => onChange("all")}
+  return (
+    <div className="toggle-tabs">
+      <div
+        className={`toggle-tabs-inner ${
+          isHome ? "toggle-tabs-inner--home" : "toggle-tabs-inner--all"
+        }`}
       >
-        All trains
-      </button>
+        <span className="toggle-thumb" aria-hidden="true" />
+
+        <button
+          type="button"
+          className={`toggle-btn ${isHome ? "toggle-btn--active" : ""}`}
+          onClick={() => onChange("home")}
+        >
+          Your home station: Lindbergh Center
+        </button>
+
+        <button
+          type="button"
+          className={`toggle-btn ${!isHome ? "toggle-btn--active" : ""}`}
+          onClick={() => onChange("all")}
+        >
+          All trains
+        </button>
+      </div>
     </div>
   );
 }
