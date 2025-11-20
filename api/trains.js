@@ -1,6 +1,6 @@
-// codespaces-react/api/trains.js
+// api/trains.js
 
-// node-fetch with dynamic import so it works even when "type": "module" exists
+// node-fetch via dynamic import so it works even if "type": "module" is set
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetchFn }) => fetchFn(...args));
 
