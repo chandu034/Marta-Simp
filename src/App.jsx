@@ -2,19 +2,18 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import StationTabs from "./components/StationTabs";
 import TrainList from "./components/TrainList";
+import StationPicker from "./components/StationPicker";   // ⬅️ NEW
 
 const API_URL = "/api/trains";
 
-// keywords we'll treat as "home" station
 const HOME_STATION_KEYWORDS = ["LINDBERGH", "LINDBERGH CENTER"];
 
-// Convert WAITING_TIME / WAITING_SECONDS to a sortable number
 function getWaitValue(t) {
   const wtRaw = t.WAITING_TIME || "";
   const wt = wtRaw.toLowerCase();
 
-  if (wt.startsWith("arriv")) return 0; // Arriving
-  if (wt.startsWith("board")) return 10; // Boarding
+  if (wt.startsWith("arriv")) return 0;
+  if (wt.startsWith("board")) return 10;
 
   const secStr = t.WAITING_SECONDS;
   if (secStr) {
@@ -28,14 +27,15 @@ function getWaitValue(t) {
     if (!Number.isNaN(minutes)) return minutes * 60;
   }
 
-  return Number.MAX_SAFE_INTEGER; // unknown → bottom
+  return Number.MAX_SAFE_INTEGER;
 }
 
 function App() {
   const [trains, setTrains] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [viewMode, setViewMode] = useState("home"); // "all" or "home"
+  const [viewMode, setViewMode] = useState("home"); // "home" | "all"
+  const [selectedStation, setSelectedStation] = useState(""); // ⬅️ NEW
 
   const fetchTrains = async () => {
     setLoading(true);
@@ -43,9 +43,7 @@ function App() {
 
     try {
       const res = await fetch(API_URL);
-      if (!res.ok) {
-        throw new Error("HTTP error " + res.status);
-      }
+      if (!res.ok) throw new Error("HTTP error " + res.status);
 
       const data = await res.json();
       console.log("MARTA rail data from proxy:", data);
@@ -64,28 +62,31 @@ function App() {
   };
 
   useEffect(() => {
-    // first load
     fetchTrains();
-
-    // auto refresh every 10 seconds
-    const id = setInterval(() => {
-      fetchTrains();
-    }, 10000);
-
+    const id = setInterval(fetchTrains, 10000);
     return () => clearInterval(id);
   }, []);
 
-  // Filter for your home station (Lindbergh Center)
+  // unique station list for "All" picker
+  const stationList = Array.from(
+    new Set(trains.map((t) => t.STATION).filter(Boolean))
+  ).sort((a, b) => a.localeCompare(b));
+
+  // home station trains (Lindbergh)
   const homeStationTrains = trains.filter((t) => {
     if (!t.STATION) return false;
     const stationUpper = t.STATION.toUpperCase();
     return HOME_STATION_KEYWORDS.some((k) => stationUpper.includes(k));
   });
 
-  // Decide what to show based on the current tab
-  const trainsToShow = viewMode === "home" ? homeStationTrains : trains;
+  // Decide what to show based on tab + selection
+  let trainsToShow = [];
+if (viewMode === "home") {
+  trainsToShow = homeStationTrains;
+} else if (viewMode === "all" && selectedStation) {
+  trainsToShow = trains.filter((t) => t.STATION === selectedStation);
+}
 
-  // Sort like MARTA boards: Arriving, 1 min, 2 min, ...
   const sortedTrainsToShow = [...trainsToShow].sort(
     (a, b) => getWaitValue(a) - getWaitValue(b)
   );
@@ -96,7 +97,7 @@ function App() {
         <h1>MARTA Rail Realtime</h1>
         <p>Testing the official MARTA rail realtime API through a backend proxy.</p>
 
-                {/* Top-right loading indicator when refreshing */}
+        {/* top-right loading chip when refreshing */}
         {loading && trains.length > 0 && (
           <div className="refresh-indicator">
             <div className="refresh-spinner" />
@@ -106,15 +107,53 @@ function App() {
           </div>
         )}
 
-        <StationTabs viewMode={viewMode} onChange={setViewMode} />
+                <StationTabs viewMode={viewMode} onChange={setViewMode} />
 
+        {/* HOME TAB – always show Lindbergh trains */}
+        {viewMode === "home" && (
+          <TrainList
+            trains={sortedTrainsToShow}
+            loading={loading}
+            error={error}
+            viewMode="home"
+          />
+        )}
 
-        <TrainList
-          trains={sortedTrainsToShow}
-          loading={loading}
-          error={error}
-          viewMode={viewMode}
-        />
+        {/* ALL TAB – STEP 1: show station list only */}
+        {viewMode === "all" && !selectedStation && (
+          <StationPicker
+            stations={stationList}
+            selectedStation={selectedStation}
+            onSelect={setSelectedStation}
+          />
+        )}
+
+        {/* ALL TAB – STEP 2: after click, hide list and show trains + back */}
+        {viewMode === "all" && selectedStation && (
+          <>
+            <div className="all-station-header">
+              <button
+                type="button"
+                className="back-chip"
+                onClick={() => setSelectedStation("")}
+              >
+                ← All stations
+              </button>
+
+              <div className="all-station-name">
+                {selectedStation}
+              </div>
+            </div>
+
+            <TrainList
+              trains={sortedTrainsToShow}
+              loading={loading}
+              error={error}
+              viewMode="all"
+            />
+          </>
+        )}
+
       </header>
     </div>
   );
