@@ -6,6 +6,13 @@ const fetch = (...args) =>
 
 module.exports = async (req, res) => {
   const API_KEY = process.env.MARTA_API_KEY;
+   // 🔍 TEMP DEBUG: see if key is visible inside Vercel
+  if (req.query.debug === "1") {
+    return res.status(200).json({
+      hasKey: !!API_KEY,
+      keyLength: API_KEY ? API_KEY.length : 0,
+    });
+  }
 
   if (!API_KEY) {
     console.error("Missing MARTA_API_KEY env var");
