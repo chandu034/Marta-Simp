@@ -1,18 +1,10 @@
 // api/trains.js
 
-// node-fetch via dynamic import so it works even if "type": "module" is set
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetchFn }) => fetchFn(...args));
+// Vercel Node runtime (Node 18+ / 22+) already has global fetch.
+// We do NOT need node-fetch here.
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   const API_KEY = process.env.MARTA_API_KEY;
-   // 🔍 TEMP DEBUG: see if key is visible inside Vercel
-  if (req.query.debug === "1") {
-    return res.status(200).json({
-      hasKey: !!API_KEY,
-      keyLength: API_KEY ? API_KEY.length : 0,
-    });
-  }
 
   if (!API_KEY) {
     console.error("Missing MARTA_API_KEY env var");
@@ -36,10 +28,11 @@ module.exports = async (req, res) => {
 
     const data = await response.json();
 
+    // CORS for your frontend
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.status(200).json(data);
   } catch (err) {
     console.error("Serverless /api/trains error:", err);
     res.status(500).json({ error: "Server error", details: err.message });
   }
-};
+}
