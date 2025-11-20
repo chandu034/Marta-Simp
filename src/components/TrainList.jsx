@@ -6,8 +6,8 @@ function getLineColor(t) {
   const line = (t.LINE || "").toUpperCase();
 
   // Destination-based rules where we are 100% sure
-  if (dest.includes("doraville")) return "gold";       // Doraville branch
-  if (dest.includes("north springs")) return "red";    // North Springs branch
+  if (dest.includes("doraville")) return "gold"; // Doraville branch
+  if (dest.includes("north springs")) return "red"; // North Springs branch
 
   // For Airport and everything else, trust the MARTA LINE field
   switch (line) {
@@ -24,16 +24,20 @@ function getLineColor(t) {
   }
 }
 
-
 function TrainList({ trains, loading, error, viewMode }) {
   if (error) {
-    return <p className="status status-error">
-      Error: {error}. Open DevTools console for more details.
-    </p>;
+    return (
+      <p className="status status-error">
+        Error: {error}. Open DevTools console for more details.
+      </p>
+    );
   }
 
-  if (loading) {
-    return <p className="status status-loading">Loading train data...</p>;
+  // Only show the big loader when we have no trains at all yet
+  if (loading && trains.length === 0) {
+    return (
+      <p className="status status-loading">Loading train data...</p>
+    );
   }
 
   if (!loading && !error && trains.length === 0) {

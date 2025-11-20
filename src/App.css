@@ -1,136 +1,169 @@
-/* Overall app layout */
-.App {
-  text-align: center;
-  background: radial-gradient(circle at top, #2b3a52 0, #141821 50%, #0c0f16 100%);
+/* ---------- Global layout ---------- */
+
+:root {
+  --mint: #acdbc9;
+  --mint-light: #dbebc2;
+  --peach-light: #fdd2b5;
+  --rose-light: #f7a7a6;
+  --rose: #f48b94;
+
+  --bg-gradient-top: #acdbc9;
+  --bg-gradient-bottom: #f48b94;
+
+  --text-main: #234;
+  --text-soft: #51606a;
+  --text-on-dark: #ffffff;
+
+  --card-bg: rgba(255, 255, 255, 0.88);
+  --card-border: rgba(255, 255, 255, 0.35);
+  --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(145deg, var(--bg-gradient-top), var(--bg-gradient-bottom));
   min-height: 100vh;
-  color: #ffffff;
+  color: var(--text-main);
+}
+
+/* ---------- App shell ---------- */
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
 }
 
 .App-header {
-  padding: 3rem 1rem 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  max-width: 680px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--card-border);
+  padding: 1.8rem 1.6rem 1.6rem;
+  backdrop-filter: blur(10px);
 }
 
+/* ---------- Typography ---------- */
+
 .App-header h1 {
-  font-size: 2.6rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-main);
 }
 
 .App-header p {
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
-  color: #c5cce0;
+  margin: 0 0 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-soft);
 }
 
-/* Reload button */
-.App-header > button {
-  background: #ffffff;
-  color: #111827;
-  border-radius: 999px;
+/* ---------- Reload button ---------- */
+
+.App-header button {
   border: none;
-  padding: 0.5rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 0.55rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  background: linear-gradient(90deg, var(--mint-light), var(--peach-light));
+  color: var(--text-main);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
-.App-header > button:disabled {
+.App-header button:disabled {
   opacity: 0.6;
   cursor: default;
   box-shadow: none;
 }
 
-.App-header > button:not(:disabled):hover {
+.App-header button:not(:disabled):hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-  background: #f3f4ff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  filter: brightness(1.02);
 }
 
-/* Tabs */
+/* ---------- Tabs (home / all trains) ---------- */
+
 .tabs {
   display: inline-flex;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  padding: 2px;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
+  margin: 0.8rem 0 1.0rem;
+  padding: 0.18rem;
+  border-radius: var(--radius-pill);
+  background: rgba(252, 252, 252, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .tab {
   border: none;
   background: transparent;
-  color: #e5e7eb;
-  padding: 0.45rem 1.3rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-soft);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
   white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .tab--active {
-  background: #ffffff;
-  color: #111827;
-  transform: translateY(-0.5px);
+  background: linear-gradient(90deg, var(--peach-light), var(--rose-light));
+  color: var(--text-main);
 }
 
-.tab:not(.tab--active):hover {
-  background: rgba(148, 163, 184, 0.25);
-}
+/* ---------- Status messages ---------- */
 
-/* Status messages */
 .status {
-  color: #e5e7eb;
-  font-size: 0.9rem;
-  margin-top: 0.75rem;
+  margin: 0.2rem 0 0.8rem;
+  font-size: 0.85rem;
+  color: var(--text-soft);
 }
 
 .status-error {
-  color: #fecaca;
+  color: #b13546;
 }
 
 .status-loading {
-  color: #bfdbfe;
+  color: #6a5a00;
 }
 
-/* Train list container */
+/* ---------- Train list ---------- */
+
 .train-list {
-  max-height: 60vh;
-  overflow-y: auto;
-  width: 90%;
-  max-width: 900px;
   border-radius: 18px;
-  background: radial-gradient(circle at top left, #1f2937 0, #020617 70%);
-  box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(15, 23, 42, 0.9);
-  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  max-height: 440px;
+  overflow-y: auto;
+  padding: 0.6rem 0.2rem 0.6rem 0;
 }
 
-/* One train row */
+/* each row = soft card */
 .train-row {
-  padding: 0.65rem 0.9rem;
-  border-bottom: 1px solid rgba(55, 65, 81, 0.9);
-  transition: background 0.12s ease, transform 0.08s ease;
+  padding: 0.45rem 0.9rem;
 }
 
-.train-row:last-child {
-  border-bottom: none;
+.train-row:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.train-row:hover {
-  background: rgba(31, 41, 55, 0.9);
-  transform: translateY(-1px);
-}
-
-/* Layout inside row */
 .train-main {
   display: flex;
   align-items: center;
@@ -139,87 +172,104 @@
 }
 
 .train-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .train-station {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: var(--text-soft);
+  margin-bottom: 0.15rem;
 }
+
+/* destination row */
 
 .train-destination-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .train-destination {
-  font-size: 1rem;
   font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Meta line: direction + next time */
+/* line pill with pastel color */
+
+.line-pill {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-on-dark);
+  background: var(--mint);
+}
+
+/* Map MARTA lines into your palette */
+.line-pill--gold {
+  background: var(--peach-light);
+  color: var(--text-main);
+}
+
+.line-pill--red {
+  background: var(--rose);
+}
+
+.line-pill--blue {
+  background: var(--mint);
+}
+
+.line-pill--green {
+  background: var(--mint-light);
+  color: var(--text-main);
+}
+
+.line-pill--default {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-main);
+}
+
+/* meta info: direction + next arrival */
+
 .train-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 0.4rem;
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: var(--text-soft);
 }
 
-/* Right side wait time */
+/* waiting time on the right */
+
 .train-wait {
-  min-width: 70px;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0.4rem;
 }
 
 .train-wait-value {
   font-size: 1rem;
   font-weight: 700;
-  color: #e5e7eb;
+  color: var(--rose);
+  background: rgba(244, 139, 148, 0.12);
+  border-radius: 14px;
+  padding: 0.25rem 0.55rem;
 }
 
-/* Line pill */
-.line-pill {
-  padding: 0.1rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #0b1120;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7);
-}
+/* ---------- Scrollbar (subtle) ---------- */
 
-/* Line color variants */
-.line-pill--gold {
-  background: linear-gradient(135deg, #facc15, #eab308);
-}
-
-.line-pill--red {
-  background: linear-gradient(135deg, #f97373, #ef4444);
-}
-
-.line-pill--blue {
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-}
-
-.line-pill--green {
-  background: linear-gradient(135deg, #4ade80, #22c55e);
-}
-
-.line-pill--default {
-  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
-}
-
-/* Scrollbar styling (desktop only) */
 .train-list::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .train-list::-webkit-scrollbar-track {
@@ -227,135 +277,41 @@
 }
 
 .train-list::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.8);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 999px;
 }
 
-/* ===========================
-   Responsive styles
-   =========================== */
+/* ---------- Responsive tweaks ---------- */
 
-/* Tablets and small laptops */
-@media (max-width: 1024px) {
+@media (max-width: 600px) {
+  .App {
+    padding: 1rem;
+  }
+
   .App-header {
-    padding: 2.5rem 1rem 3rem;
+    padding: 1.35rem 1.2rem 1.1rem;
   }
 
   .App-header h1 {
-    font-size: 2.1rem;
-  }
-
-  .train-list {
-    max-width: 95%;
-    border-radius: 16px;
-  }
-}
-
-/* Phones in portrait, small screens */
-@media (max-width: 768px) {
-  .App-header {
-    padding: 2rem 0.75rem 2.5rem;
-  }
-
-  .App-header h1 {
-    font-size: 1.8rem;
-  }
-
-  .App-header p {
-    font-size: 0.9rem;
-    padding: 0 0.5rem;
-  }
-
-  .App-header > button {
-    width: 100%;
-    max-width: 320px;
-    padding: 0.55rem 1rem;
+    font-size: 1.35rem;
   }
 
   .tabs {
     width: 100%;
-    max-width: 360px;
     justify-content: space-between;
   }
 
   .tab {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.8rem;
-  }
-
-  .train-list {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    max-height: calc(100vh - 230px); /* header plus tabs plus button */
-    box-shadow:
-      0 10px 25px rgba(0, 0, 0, 0.55),
-      0 0 0 1px rgba(15, 23, 42, 0.9);
-  }
-
-  .train-row {
-    padding: 0.6rem 0.75rem;
+    flex: 1;
+    text-align: center;
+    padding-inline: 0;
   }
 
   .train-main {
     align-items: flex-start;
   }
 
-  .train-destination {
-    font-size: 0.95rem;
-  }
-
-  .train-meta {
-    font-size: 0.75rem;
-  }
-
-  .train-wait {
-    min-width: 58px;
-  }
-
   .train-wait-value {
     font-size: 0.95rem;
-  }
-}
-
-/* Extra small phones */
-@media (max-width: 480px) {
-  .App-header {
-    padding-top: 1.5rem;
-  }
-
-  .App-header h1 {
-    font-size: 1.55rem;
-  }
-
-  .tabs {
-    max-width: 100%;
-    border-radius: 14px;
-    padding: 2px;
-  }
-
-  .tab {
-    flex: 1;
-    text-align: center;
-    padding-inline: 0.4rem;
-  }
-
-  .train-main {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  /* On very narrow screens, move wait time under the destination for more space */
-  .train-wait {
-    text-align: right;
-  }
-
-  .train-meta {
-    gap: 0.4rem;
-  }
-
-  .line-pill {
-    font-size: 0.65rem;
-    padding: 0.08rem 0.5rem;
   }
 }

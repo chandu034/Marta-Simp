@@ -13,8 +13,8 @@ function getWaitValue(t) {
   const wtRaw = t.WAITING_TIME || "";
   const wt = wtRaw.toLowerCase();
 
-  if (wt.startsWith("arriv")) return 0;      // Arriving
-  if (wt.startsWith("board")) return 10;     // Boarding
+  if (wt.startsWith("arriv")) return 0; // Arriving
+  if (wt.startsWith("board")) return 10; // Boarding
 
   const secStr = t.WAITING_SECONDS;
   if (secStr) {
@@ -35,13 +35,11 @@ function App() {
   const [trains, setTrains] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [viewMode, setViewMode] = useState("home"); // 'all' or 'home'
-
+  const [viewMode, setViewMode] = useState("home"); // "all" or "home"
 
   const fetchTrains = async () => {
     setLoading(true);
     setError("");
-    setTrains([]);
 
     try {
       const res = await fetch(API_URL);
@@ -66,7 +64,15 @@ function App() {
   };
 
   useEffect(() => {
+    // first load
     fetchTrains();
+
+    // auto refresh every 10 seconds
+    const id = setInterval(() => {
+      fetchTrains();
+    }, 10000);
+
+    return () => clearInterval(id);
   }, []);
 
   // Filter for your home station (Lindbergh Center)
@@ -90,13 +96,10 @@ function App() {
         <h1>MARTA Rail Realtime</h1>
         <p>Testing the official MARTA rail realtime API through a backend proxy.</p>
 
-        <button
-          onClick={fetchTrains}
-          disabled={loading}
-          style={{ marginBottom: "1rem" }}
-        >
-          {loading ? "Loading..." : "Reload train data"}
-        </button>
+        {/* tiny status only if we already have data */}
+        {loading && trains.length > 0 && (
+          <p className="status status-loading">Refreshing trains…</p>
+        )}
 
         <StationTabs viewMode={viewMode} onChange={setViewMode} />
 
