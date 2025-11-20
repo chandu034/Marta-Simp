@@ -1,31 +1,361 @@
+/* Overall app layout */
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  background: radial-gradient(circle at top, #2b3a52 0, #141821 50%, #0c0f16 100%);
+  min-height: 100vh;
+  color: #ffffff;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  padding: 3rem 1rem 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App-header h1 {
+  font-size: 2.6rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
 }
 
-.heart {
-  color: #ff0000;
+.App-header p {
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  color: #c5cce0;
 }
 
-.small {
-  font-size: 0.75rem;
+/* Reload button */
+.App-header > button {
+  background: #ffffff;
+  color: #111827;
+  border-radius: 999px;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.App-header > button:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.App-header > button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  background: #f3f4ff;
+}
+
+/* Tabs */
+.tabs {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 2px;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  padding: 0.45rem 1.3rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+  white-space: nowrap;
+}
+
+.tab--active {
+  background: #ffffff;
+  color: #111827;
+  transform: translateY(-0.5px);
+}
+
+.tab:not(.tab--active):hover {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+/* Status messages */
+.status {
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+.status-error {
+  color: #fecaca;
+}
+
+.status-loading {
+  color: #bfdbfe;
+}
+
+/* Train list container */
+.train-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, #1f2937 0, #020617 70%);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+  padding: 0.75rem 0.5rem;
+}
+
+/* One train row */
+.train-row {
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+  transition: background 0.12s ease, transform 0.08s ease;
+}
+
+.train-row:last-child {
+  border-bottom: none;
+}
+
+.train-row:hover {
+  background: rgba(31, 41, 55, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Layout inside row */
+.train-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.train-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.train-station {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.train-destination-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.train-destination {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Meta line: direction + next time */
+.train-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+/* Right side wait time */
+.train-wait {
+  min-width: 70px;
+  text-align: right;
+}
+
+.train-wait-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e5e7eb;
+}
+
+/* Line pill */
+.line-pill {
+  padding: 0.1rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0b1120;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7);
+}
+
+/* Line color variants */
+.line-pill--gold {
+  background: linear-gradient(135deg, #facc15, #eab308);
+}
+
+.line-pill--red {
+  background: linear-gradient(135deg, #f97373, #ef4444);
+}
+
+.line-pill--blue {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.line-pill--green {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+}
+
+.line-pill--default {
+  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+}
+
+/* Scrollbar styling (desktop only) */
+.train-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.train-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.train-list::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.8);
+  border-radius: 999px;
+}
+
+/* ===========================
+   Responsive styles
+   =========================== */
+
+/* Tablets and small laptops */
+@media (max-width: 1024px) {
+  .App-header {
+    padding: 2.5rem 1rem 3rem;
+  }
+
+  .App-header h1 {
+    font-size: 2.1rem;
+  }
+
+  .train-list {
+    max-width: 95%;
+    border-radius: 16px;
+  }
+}
+
+/* Phones in portrait, small screens */
+@media (max-width: 768px) {
+  .App-header {
+    padding: 2rem 0.75rem 2.5rem;
+  }
+
+  .App-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .App-header p {
+    font-size: 0.9rem;
+    padding: 0 0.5rem;
+  }
+
+  .App-header > button {
+    width: 100%;
+    max-width: 320px;
+    padding: 0.55rem 1rem;
+  }
+
+  .tabs {
+    width: 100%;
+    max-width: 360px;
+    justify-content: space-between;
+  }
+
+  .tab {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .train-list {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    max-height: calc(100vh - 230px); /* header plus tabs plus button */
+    box-shadow:
+      0 10px 25px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(15, 23, 42, 0.9);
+  }
+
+  .train-row {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .train-main {
+    align-items: flex-start;
+  }
+
+  .train-destination {
+    font-size: 0.95rem;
+  }
+
+  .train-meta {
+    font-size: 0.75rem;
+  }
+
+  .train-wait {
+    min-width: 58px;
+  }
+
+  .train-wait-value {
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+  .App-header {
+    padding-top: 1.5rem;
+  }
+
+  .App-header h1 {
+    font-size: 1.55rem;
+  }
+
+  .tabs {
+    max-width: 100%;
+    border-radius: 14px;
+    padding: 2px;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding-inline: 0.4rem;
+  }
+
+  .train-main {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  /* On very narrow screens, move wait time under the destination for more space */
+  .train-wait {
+    text-align: right;
+  }
+
+  .train-meta {
+    gap: 0.4rem;
+  }
+
+  .line-pill {
+    font-size: 0.65rem;
+    padding: 0.08rem 0.5rem;
+  }
 }
